@@ -1,0 +1,23 @@
+/* Query 1 producto más vendido en 1996 */
+SELECT TOP(1) p.ProductID, p.ProductName, SUM(f.Quantity) AS 'Ammount Sold', YEAR(f.OrderDate) AS 'Year' 
+FROM FactSales f, DimProduct p
+WHERE f.ProductID = p.ProductID AND YEAR(f.OrderDate) = 1996
+GROUP BY p.ProductID, p.ProductName, YEAR(f.OrderDate)
+ORDER BY [Ammount Sold] DESC;
+
+/* Query 2 total de ventas (dinero) en 1996 */
+SELECT SUM(total) AS 'Total Earned on 1996'
+FROM FactSales
+WHERE YEAR(OrderDate) = 1996;
+
+/* Query 3 total (dinero) historico en la BD */
+SELECT SUM(total) AS 'Historic Total Earned'
+FROM FactSales;
+
+/* QUery 4 país que vendió más dinero en 1997 */
+SELECT TOP(1) p.Country, SUM(f.total) AS 'Total Earned By Country'
+FROM FactSales f, DimProduct p 
+WHERE YEAR(f.OrderDate) = 1997
+GROUP BY p.Country
+ORDER BY [Total Earned By Country] DESC;
+
