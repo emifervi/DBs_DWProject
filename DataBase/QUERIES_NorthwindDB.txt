@@ -1,0 +1,46 @@
+﻿/*Q1.¿Cuál es el producto más vendido en 1996?*/
+SELECT TOP(1) p.ProductID, p.ProductName, SUM(od.Quantity) AS 'Ammount Sold', YEAR(o.OrderDate) AS 'Year'
+FROM Products p, [Order Details] od, Orders o
+WHERE p.ProductID = od.ProductID AND od.OrderID = o.OrderID AND YEAR(o.OrderDate) = 1996
+GROUP BY p.ProductID, p.ProductName, YEAR(o.OrderDate)
+ORDER BY [Ammount Sold] DESC;
+
+/* Query 2 total de ventas (dinero) en 1996 */
+SELECT SUM(od.UnitPrice * od.Quantity - od.UnitPrice * od.Quantity * od.Discount)
+FROM [Order Details] od, Orders o
+WHERE YEAR(o.OrderDate) = 1996 AND o.OrderID = od.OrderID;
+
+/* Query 3 */
+SELECT SUM(od.UnitPrice * od.Quantity - od.UnitPrice * od.Quantity * od.Discount)
+FROM [Order Details] od, Orders o
+WHERE o.OrderID = od.OrderID;
+
+/* Query 4 */
+SELECT TOP(1) s.Country, SUM(od.unitPrice * od.quantity - od.unitPrice * od.quantity * od.discount) AS 'Total Earned By Country'
+FROM Suppliers s, [Order Details] od, Products p, Orders o
+WHERE s.SupplierID = p.SupplierID AND p.ProductID = od.ProductID AND YEAR(o.OrderDate) = 1997 AND od.OrderID = o.OrderID
+GROUP BY s.Country
+ORDER BY [Total Earned By Country] DESC;
+
+/* Query 5 */
+SELECT s.City, s.Region, T.Country
+FROM (SELECT TOP(1) s.Country, SUM(od.unitPrice * od.quantity - od.unitPrice * od.quantity * od.discount) AS 'Total Earned By Country'
+      FROM Suppliers s, [Order Details] od, Products p, Orders o
+      WHERE s.SupplierID = p.SupplierID AND p.ProductID = od.ProductID AND YEAR(o.OrderDate) = 1997 AND od.OrderID = o.OrderID
+      GROUP BY s.Country
+      ORDER BY [Total Earned By Country] DESC) AS T, Suppliers s
+WHERE s.Country = T.Country AND T.Country = 'USA';
+
+/* Query 6 */
+SELECT TOP(5) p.ProductID, p.ProductName, SUM(Quantity) AS 'Ammount sold', YEAR(o.OrderDate) AS 'Year'
+FROM Products p, [Order Details] od, Orders o
+WHERE p.ProductID = od.ProductID AND od.OrderID = o.OrderID
+GROUP BY p.ProductID, p.ProductName, YEAR(o.OrderDate)
+ORDER BY [Ammount Sold] DESC;
+
+/* Query 8 */
+SELECT YEAR(o.OrderDate) AS 'Year', SUM(od.unitPrice * od.quantity - od.unitPrice * od.quantity * od.discount) AS 'Total Sales'
+FROM Orders o, [Order Details] od
+WHERE o.OrderID = od.OrderID AND YEAR(o.OrderDate) = 1997
+GROUP BY YEAR(o.OrderDate)
+
