@@ -16,20 +16,22 @@ FROM [Order Details] od, Orders o
 WHERE o.OrderID = od.OrderID;
 
 /* Query 4 */
-SELECT TOP(1) s.Country, SUM(od.unitPrice * od.quantity - od.unitPrice * od.quantity * od.discount) AS 'Total Earned By Country'
-FROM Suppliers s, [Order Details] od, Products p, Orders o
-WHERE s.SupplierID = p.SupplierID AND p.ProductID = od.ProductID AND YEAR(o.OrderDate) = 1997 AND od.OrderID = o.OrderID
-GROUP BY s.Country
+SELECT TOP(1) e.Country, SUM(od.unitPrice * od.quantity - od.unitPrice * od.quantity * od.discount) AS 'Total Earned By Country'
+FROM Employees e, Orders o, [Order Details] od
+WHERE e.EmployeeID = o.EmployeeID AND o.OrderID = od.OrderID AND YEAR(o.OrderDate) = 1997
+GROUP BY e.Country
 ORDER BY [Total Earned By Country] DESC;
 
 /* Query 5 */
-SELECT s.City, s.Region, T.Country
-FROM (SELECT TOP(1) s.Country, SUM(od.unitPrice * od.quantity - od.unitPrice * od.quantity * od.discount) AS 'Total Earned By Country'
-      FROM Suppliers s, [Order Details] od, Products p, Orders o
-      WHERE s.SupplierID = p.SupplierID AND p.ProductID = od.ProductID AND YEAR(o.OrderDate) = 1997 AND od.OrderID = o.OrderID
-      GROUP BY s.Country
-      ORDER BY [Total Earned By Country] DESC) AS T, Suppliers s
-WHERE s.Country = T.Country AND T.Country = 'USA';
+SELECT TOP(1) e.City, e.Region, SUM(det.unitPrice * det.quantity - det.unitPrice * det.quantity * det.discount) AS 'Total Earned'
+FROM (SELECT TOP(1) e.Country, SUM(od.unitPrice * od.quantity - od.unitPrice * od.quantity * od.discount) AS 'Total Earned By Country'
+	  FROM Employees e, Orders o, [Order Details] od
+	  WHERE e.EmployeeID = o.EmployeeID AND o.OrderID = od.OrderID AND YEAR(o.OrderDate) = 1997
+	  GROUP BY e.Country
+	  ORDER BY [Total Earned By Country] DESC) AS T, Employees e, Orders r, [Order Details] det
+WHERE e.Country = T.Country AND e.Country = 'USA' AND e.EmployeeID = r.EmployeeID AND r.OrderID = det.OrderID
+GROUP BY e.City, e.Region, E.Country
+ORDER BY [Total Earned] DESC;
 
 /* Query 6 */
 SELECT TOP(5) p.ProductID, p.ProductName, SUM(Quantity) AS 'Ammount sold', YEAR(o.OrderDate) AS 'Year'
@@ -38,9 +40,20 @@ WHERE p.ProductID = od.ProductID AND od.OrderID = o.OrderID
 GROUP BY p.ProductID, p.ProductName, YEAR(o.OrderDate)
 ORDER BY [Ammount Sold] DESC;
 
+/* Query 7 */
+SELECT Rank, [Product ID], [Product Name], [Quantity Sold], Year
+FROM(
+		SELECT p.ProductID AS 'Product ID' , p.ProductName AS 'Product Name', SUM(od.Quantity) as 'Quantity Sold', YEAR(o.OrderDate) AS 'Year' , ROW_NUMBER() OVER (PARTITION BY YEAR(o.OrderDate) ORDER BY SUM(od.Quantity) DESC) as 'Rank' 
+		FROM Products p, [Order Details] od, Orders o
+		WHERE p.ProductID = od.ProductID AND od.OrderID = o.OrderID
+		GROUP BY p.ProductID, p.ProductName, YEAR(o.OrderDate)
+	) AS year_partition
+WHERE [Rank] <= 5
+ORDER BY Year DESC, [Quantity Sold] DESC;
+
 /* Query 8 */
 SELECT YEAR(o.OrderDate) AS 'Year', SUM(od.unitPrice * od.quantity - od.unitPrice * od.quantity * od.discount) AS 'Total Sales'
 FROM Orders o, [Order Details] od
 WHERE o.OrderID = od.OrderID AND YEAR(o.OrderDate) = 1997
-GROUP BY YEAR(o.OrderDate)
+GROUP BY YEAR(o.OrderDate);
 

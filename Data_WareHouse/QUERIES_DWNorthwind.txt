@@ -15,20 +15,22 @@ SELECT SUM(total) AS 'Historic Total Earned'
 FROM FactSales;
 
 /* Query 4 país que vendió más dinero en 1997 */
-SELECT TOP(1) p.Country, SUM(f.total) AS 'Total Earned By Country'
-FROM FactSales f, DimProduct p 
-WHERE f.ProductID = p.ProductID AND YEAR(f.OrderDate) = 1997
-GROUP BY p.Country
+SELECT TOP(1) e.Country, SUM(f.Total) AS 'Total Earned By Country' 
+FROM DimEmployee e, FactSales f
+WHERE e.EmployeeID = f.EmployeeID AND YEAR(f.OrderDate) = 1997
+GROUP BY e.Country
 ORDER BY [Total Earned By Country] DESC;
 
 /* Query 5 */
-SELECT p.City, p.Region, T.Country
-FROM (SELECT TOP(1) c.Country, SUM(f.Total) AS 'Total Earned By Country'
-	  FROM FactSales f, DimProduct c
-	  WHERE c.ProductID = f.ProductID AND YEAR(f.OrderDate) = 1997
-	  GROUP BY c.Country
-	  ORDER BY [Total Earned By Country] DESC) AS T, DimProduct p
-WHERE p.Country = T.Country AND T.Country = 'USA';
+SELECT TOP(1) e.City, e.Region, SUM(fs.Total) AS 'Total Earned'
+FROM(SELECT TOP(1) e.Country, SUM(f.Total) AS 'Total Earned By Country' 
+     FROM DimEmployee e, FactSales f
+     WHERE e.EmployeeID = f.EmployeeID AND YEAR(f.OrderDate) = 1997
+     GROUP BY e.Country
+     ORDER BY [Total Earned By Country] DESC) AS T, DimEmployee e, FactSales fs
+WHERE e.Country = T.Country AND e.Country = 'USA' AND e.EmployeeID = fs.EmployeeID
+GROUP BY e.City, e.Region
+ORDER BY [Total Earned] DESC;
 
 /* Query 6 */
 SELECT TOP(5) p.ProductID, p.ProductName, SUM(f.Quantity) AS 'Ammount sold', YEAR(f.OrderDate) AS 'Year'
@@ -36,6 +38,17 @@ FROM DimProduct p, FactSales f
 WHERE p.ProductID = f.ProductID
 GROUP BY p.ProductID, p.ProductName, YEAR(f.OrderDate)
 ORDER BY [Ammount sold] DESC;
+
+/* Query 7 */
+SELECT [Rank], [Product ID], [Product Name], [Quantity Sold], [Year]
+FROM(
+	SELECT p.ProductID AS 'Product ID', p.ProductName AS 'Product Name', SUM(f.Quantity) AS 'Quantity Sold', YEAR(f.OrderDate) AS 'Year', ROW_NUMBER() OVER(PARTITION BY YEAR(f.OrderDate) ORDER BY SUM(f.Quantity) DESC) AS 'Rank' 
+	FROM DimProduct p, FactSales f
+	WHERE p.ProductID = f.ProductID
+	GROUP BY p.ProductID, p.ProductName, YEAR(f.OrderDate)
+	) AS year_partition
+WHERE [Rank] <= 5
+ORDER BY [Year] DESC, [Quantity Sold] DESC;
 
 /* Query 8 */
 SELECT YEAR(f.OrderDate) as 'Year', SUM(f.Total) AS 'Total Sales'
