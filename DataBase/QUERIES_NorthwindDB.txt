@@ -41,7 +41,7 @@ GROUP BY p.ProductID, p.ProductName
 ORDER BY [Ammount Sold] DESC;
 
 /* Query 7 */
-SELECT Rank, [Product ID], [Product Name], [Quantity Sold], Year
+SELECT [Product ID], [Product Name], [Quantity Sold], [Year]
 FROM(
 		SELECT p.ProductID AS 'Product ID' , p.ProductName AS 'Product Name', SUM(od.Quantity) as 'Quantity Sold', YEAR(o.OrderDate) AS 'Year' , ROW_NUMBER() OVER (PARTITION BY YEAR(o.OrderDate) ORDER BY SUM(od.Quantity) DESC) as 'Rank' 
 		FROM Products p, [Order Details] od, Orders o
@@ -49,7 +49,7 @@ FROM(
 		GROUP BY p.ProductID, p.ProductName, YEAR(o.OrderDate)
 	) AS year_partition
 WHERE [Rank] <= 5
-ORDER BY Year DESC, [Quantity Sold] DESC;
+ORDER BY [Year] DESC, [Quantity Sold] DESC;
 
 /* Query 8 */
 SELECT YEAR(o.OrderDate) AS 'Year', SUM(od.unitPrice * od.quantity - od.unitPrice * od.quantity * od.discount) AS 'Total Sales'
