@@ -51,7 +51,7 @@ WHERE [Rank] <= 5
 ORDER BY [Year] DESC, [Quantity Sold] DESC;
 
 /* Query 8 */
-SELECT YEAR(f.OrderDate) as 'Year', SUM(f.Total) AS 'Total Sales'
+SELECT YEAR(f.OrderDate) as 'Year', SUM(f.Total) AS 'Total Sales on 1997'
 FROM FactSales f
 WHERE YEAR(f.OrderDate) = 1997
 GROUP BY YEAR(f.OrderDate);

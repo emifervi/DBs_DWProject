@@ -52,7 +52,7 @@ WHERE [Rank] <= 5
 ORDER BY [Year] DESC, [Quantity Sold] DESC;
 
 /* Query 8 */
-SELECT YEAR(o.OrderDate) AS 'Year', SUM(od.unitPrice * od.quantity - od.unitPrice * od.quantity * od.discount) AS 'Total Sales'
+SELECT YEAR(o.OrderDate) AS 'Year', SUM(od.unitPrice * od.quantity - od.unitPrice * od.quantity * od.discount) AS 'Total Sales on 1997'
 FROM Orders o, [Order Details] od
 WHERE o.OrderID = od.OrderID AND YEAR(o.OrderDate) = 1997
 GROUP BY YEAR(o.OrderDate);
