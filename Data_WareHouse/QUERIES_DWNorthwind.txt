@@ -33,10 +33,10 @@ GROUP BY e.City, e.Region
 ORDER BY [Total Earned] DESC;
 
 /* Query 6 */
-SELECT TOP(5) p.ProductID, p.ProductName, SUM(f.Quantity) AS 'Ammount sold', YEAR(f.OrderDate) AS 'Year'
+SELECT TOP(5) p.ProductID, p.ProductName, SUM(f.Quantity) AS 'Ammount sold'
 FROM DimProduct p, FactSales f
 WHERE p.ProductID = f.ProductID
-GROUP BY p.ProductID, p.ProductName, YEAR(f.OrderDate)
+GROUP BY p.ProductID, p.ProductName
 ORDER BY [Ammount sold] DESC;
 
 /* Query 7 */

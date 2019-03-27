@@ -34,10 +34,10 @@ GROUP BY e.City, e.Region, E.Country
 ORDER BY [Total Earned] DESC;
 
 /* Query 6 */
-SELECT TOP(5) p.ProductID, p.ProductName, SUM(Quantity) AS 'Ammount sold', YEAR(o.OrderDate) AS 'Year'
+SELECT TOP(5) p.ProductID, p.ProductName, SUM(Quantity) AS 'Ammount sold'
 FROM Products p, [Order Details] od, Orders o
 WHERE p.ProductID = od.ProductID AND od.OrderID = o.OrderID
-GROUP BY p.ProductID, p.ProductName, YEAR(o.OrderDate)
+GROUP BY p.ProductID, p.ProductName
 ORDER BY [Ammount Sold] DESC;
 
 /* Query 7 */
