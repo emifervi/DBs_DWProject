@@ -1,10 +1,10 @@
   use master
-create database DBNorthwind
+create database NorthwindDB
 GO
 
 SET DATEFORMAT mdy
 GO
-use "DBNorthwind"
+use "NorthwindDB"
 go
 IF NOT EXISTS (SELECT *
                FROM sysusers
@@ -9358,7 +9358,7 @@ GO
 
 
 
-use [DBNorthwind]
+use [NorthwindDB]
 GO
 GRANT SELECT TO [public]
 GO

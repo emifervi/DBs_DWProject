@@ -1,7 +1,7 @@
 /* Insert customer data */
 INSERT INTO DimCustomer
 	SELECT c.CustomerID, c.CompanyName, c.City, c.Country, c.Region
-	FROM DBNorthwind.dbo.Customers c;
+	FROM NorthwindDB.dbo.Customers c;
 
 /* Update customer region by country (except USA) */
 UPDATE DimCustomer SET Region = 'Europe' 
@@ -20,7 +20,7 @@ WHERE Country = 'Argentina' OR Country = 'Brazil' OR Country = 'Venezuela';
 /* Insert employee data */
 INSERT INTO DimEmployee
 	SELECT e.EmployeeID, CONCAT(e.FirstName,' ',e.LastName), e.City, e.Country, e.Region, e.HireDate
-	FROM DBNorthwind.dbo.Employees e;
+	FROM NorthwindDB.dbo.Employees e;
 
 /* Update employee region based on country */
 UPDATE DimEmployee SET Region = 'Europe' WHERE Country = 'UK';
@@ -28,12 +28,12 @@ UPDATE DimEmployee SET Region = 'Europe' WHERE Country = 'UK';
 
 INSERT INTO DimTime
 	SELECT DISTINCT o.OrderDate
-	FROM DBNorthwind.dbo.Orders o;
+	FROM NorthwindDB.dbo.Orders o;
 
 
 INSERT INTO DimProduct
 	SELECT p.ProductID, p.ProductName, c.CategoryName, s.CompanyName, s.Address, s.City, s.Region, s.PostalCode, s.Country
-	FROM DBNorthwind.dbo.Products p, DBNorthwind.dbo.Categories c, DBNorthwind.dbo.Suppliers s
+	FROM NorthwindDB.dbo.Products p, NorthwindDB.dbo.Categories c, NorthwindDB.dbo.Suppliers s
 	WHERE p.CategoryID = c.CategoryID AND p.SupplierID = s.SupplierID
 
 /* Update product region based on country */
@@ -60,5 +60,5 @@ INSERT INTO FactSales
 	SELECT od.ProductID, o.EmployeeID, o.CustomerID, o.OrderDate , o.orderID, od.quantity, od.unitPrice, od.discount, 
 	od.unitPrice * od.quantity * od.discount, 
 	od.unitPrice * od.quantity - od.unitPrice * od.quantity * od.discount   
-	FROM DBNorthwind.dbo.Orders o, DBNorthwind.dbo.[Order Details] od 
+	FROM NorthwindDB.dbo.Orders o, NorthwindDB.dbo.[Order Details] od 
 	WHERE o.OrderID = od.OrderID;
