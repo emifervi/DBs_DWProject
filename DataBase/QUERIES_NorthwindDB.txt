@@ -6,12 +6,12 @@ GROUP BY p.ProductID, p.ProductName, YEAR(o.OrderDate)
 ORDER BY [Ammount Sold] DESC;
 
 /* Query 2 total de ventas (dinero) en 1996 */
-SELECT SUM(od.UnitPrice * od.Quantity - od.UnitPrice * od.Quantity * od.Discount)
+SELECT SUM(od.UnitPrice * od.Quantity - od.UnitPrice * od.Quantity * od.Discount) AS 'Total Earned on 1996'
 FROM [Order Details] od, Orders o
 WHERE YEAR(o.OrderDate) = 1996 AND o.OrderID = od.OrderID;
 
 /* Query 3 */
-SELECT SUM(od.UnitPrice * od.Quantity - od.UnitPrice * od.Quantity * od.Discount)
+SELECT SUM(od.UnitPrice * od.Quantity - od.UnitPrice * od.Quantity * od.Discount) AS 'Historic Total Earned'
 FROM [Order Details] od, Orders o
 WHERE o.OrderID = od.OrderID;
 
