@@ -28,7 +28,7 @@ FROM(SELECT TOP(1) e.Country, SUM(f.Total) AS 'Total Earned By Country'
      WHERE e.EmployeeID = f.EmployeeID AND YEAR(f.OrderDate) = 1997
      GROUP BY e.Country
      ORDER BY [Total Earned By Country] DESC) AS T, DimEmployee e, FactSales fs
-WHERE e.Country = T.Country AND e.Country = 'USA' AND e.EmployeeID = fs.EmployeeID
+WHERE e.Country = T.Country AND e.Country = 'USA' AND e.EmployeeID = fs.EmployeeID AND YEAR(fs.OrderDate) = 1997
 GROUP BY e.City, e.Region
 ORDER BY [Total Earned] DESC;
 

@@ -29,7 +29,7 @@ FROM (SELECT TOP(1) e.Country, SUM(od.unitPrice * od.quantity - od.unitPrice * o
 	  WHERE e.EmployeeID = o.EmployeeID AND o.OrderID = od.OrderID AND YEAR(o.OrderDate) = 1997
 	  GROUP BY e.Country
 	  ORDER BY [Total Earned By Country] DESC) AS T, Employees e, Orders r, [Order Details] det
-WHERE e.Country = T.Country AND e.Country = 'USA' AND e.EmployeeID = r.EmployeeID AND r.OrderID = det.OrderID
+WHERE e.Country = T.Country AND e.Country = 'USA' AND e.EmployeeID = r.EmployeeID AND r.OrderID = det.OrderID AND YEAR(r.OrderDate) = 1997
 GROUP BY e.City, e.Region, E.Country
 ORDER BY [Total Earned] DESC;
 
