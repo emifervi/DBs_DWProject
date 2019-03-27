@@ -40,7 +40,7 @@ GROUP BY p.ProductID, p.ProductName
 ORDER BY [Ammount sold] DESC;
 
 /* Query 7 */
-SELECT [Rank], [Product ID], [Product Name], [Quantity Sold], [Year]
+SELECT [Product ID], [Product Name], [Quantity Sold], [Year]
 FROM(
 	SELECT p.ProductID AS 'Product ID', p.ProductName AS 'Product Name', SUM(f.Quantity) AS 'Quantity Sold', YEAR(f.OrderDate) AS 'Year', ROW_NUMBER() OVER(PARTITION BY YEAR(f.OrderDate) ORDER BY SUM(f.Quantity) DESC) AS 'Rank' 
 	FROM DimProduct p, FactSales f
